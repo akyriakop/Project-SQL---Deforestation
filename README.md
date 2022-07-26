@@ -8,3 +8,19 @@ Write out a set of recommendations as an analyst on the ForestQuery team.
 ● What have you learned from the World Bank data?
 
 ● Which countries should we focus on over others?
+
+CREATE OR REPLACE VIEW forestation
+AS
+SELECT f.country_code AS forest_cc,
+        f.country_name AS f_name,
+        f.year AS f_year,
+         f.forest_area_sqkm AS f_sq_km,
+         l.total_area_sq_mi AS l_total_area_sq_mi,
+         r.region AS r_region, r.income_group AS r_income_group,
+          (f.forest_area_sqkm/(l.total_area_sq_mi*2.59))*100 AS perc_forest_area
+  FROM forest_area f
+  Join land_area l
+  ON f.country_code = l.country_code
+  JOIN regions r
+  ON l.country_code = r.country_code
+  WHERE f.year = l.year ORDER BY 1;
